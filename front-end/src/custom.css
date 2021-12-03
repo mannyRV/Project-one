@@ -1,0 +1,50 @@
+
+.bd { 
+    background-image: url("../src/images/pexels-pixabay-268533.jpg");
+    background-color:black;
+    background-position:top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: scroll;
+}
+
+@media (min-width: 768px) {
+    .navbar-expand-md .navbar-collapse {
+        display: flex!important;
+        flex-basis: auto;
+        flex-direction: row-reverse;
+    }
+}
+/* Login form size to be small centered */
+.card-body{
+    width: 40%;
+    align-self: center;
+}
+
+.bg-dark {
+    --bs-bg-opacity: 0.2;
+    background-color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity))!important;
+}
+/* floating form label color */
+label {
+    display: inline-block;
+    color: black;
+}
+
+/* size of login form text header */
+.h2, h2 {
+        font-size: 1.5rem;
+}
+/* login text color and background */
+.alert-dark {
+    color: wheat;
+    background-color: rgba(0,0,0,0.70);
+    -color: #bcbebf;
+    text-align: center;
+    border: none;
+}
+a:any-link {
+    text-decoration: none;
+    cursor: auto;
+    color: white;
+    }
