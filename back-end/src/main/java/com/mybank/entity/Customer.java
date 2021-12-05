@@ -7,7 +7,6 @@ import java.util.List;
 @Table(name="customers")
 public class Customer {
     @Id
-    @GeneratedValue
     private int id;
     private String name;
     private String email;

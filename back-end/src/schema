@@ -1,0 +1,42 @@
+
+// This schema is to be run only one time in mysql
+
+DROP DATABASE IF EXISTS mybank;
+CREATE DATABASE mybank;
+USE mybank;
+
+CREATE TABLE customers (
+id int PRIMARY KEY AUTO_INCREMENT,
+name varchar(50),
+email varchar(100),
+password varchar(100)
+);
+
+CREATE TABLE accounts (
+number varchar(25) PRIMARY KEY,
+balance double,
+owner_id int ,
+FOREIGN KEY (owner_id) REFERENCES customers (id)
+);
+
+CREATE TABLE transactions (
+t_id int PRIMARY KEY AUTO_INCREMENT,
+amount double,
+date DATETIME DEFAULT CURRENT_TIMESTAMP,
+fromAccount_number varchar(25),
+to_account_number varchar(25),
+FOREIGN KEY (fromAccount_number) REFERENCES accounts (number)
+);
+
+INSERT INTO customers (email, name , password)
+VALUES ('customer1@email.com','customer1','password1'),
+       ('customer2@email.com','customer2','password2'),
+       ('customer3@email.com','customer3','password3'),
+       ('customer4@email.com','customer4','password4');
+
+INSERT INTO accounts (number, balance , owner_id)
+VALUES ('8909797657',1000.00,1),
+       ('9554779715',2000.00,2),
+       ('0619396195',3000.00,3),
+       ('6951023766',4000.00,4);
+

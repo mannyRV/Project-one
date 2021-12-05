@@ -21,6 +21,7 @@ public class AccountController {
     static {
         entityManagerFactory = Persistence.createEntityManagerFactory("my-pu");
     }
+
     //-------------------------------------------------
     static AccountRepo acctRepo = new JpaAccountRepo(entityManagerFactory);
     static CustomerRepo customerRepo = new JpaCustomerRepo(entityManagerFactory);
@@ -29,16 +30,37 @@ public class AccountController {
 //        String
 //    }
 
-//    viewAccount;
+    //    viewAccounts;
     public static Handler viewAccounts = ctx -> {
-       int custId = Integer.parseInt(ctx.pathParam("customerId"));
-       Customer customer = customerRepo.viewCustomer(custId);
-       if (customer == null) {
-              ctx.status(HttpStatus.NOT_FOUND_404);
+        int custId = Integer.parseInt(ctx.pathParam("customerId"));
+        Customer customer = customerRepo.viewCustomer(custId);
+        if (customer == null) {
+            ctx.status(HttpStatus.NOT_FOUND_404);
         }
         List<Account> accounts = acctRepo.viewAccounts(customer);
         ctx.json(accounts);
-};
-//    viewAccounts;
-//    closeAccount;
+    };
+    //    viewAccount;
+    public static Handler viewAccount = ctx -> {
+        String acctNumber = ctx.pathParam("acctNumber");
+        Account account = acctRepo.viewAccount(acctNumber);
+        int custId = Integer.parseInt(ctx.pathParam("customerId"));
+        if (account.getOwner().getId()==custId) {
+            ctx.json(account);
+        } else {
+            ctx.status(HttpStatus.NOT_FOUND_404);
+        }
+    };
+    //delete account
+//    public static Handler deleteAccount = ctx -> {
+//        int custId = Integer.parseInt(ctx.pathParam("customerId"));
+//
+//        String acctNumber = ctx.pathParam("acctNumber");
+//        Account account = acctRepo.viewAccount(acctNumber);
+//        if (account.getOwner().getId()==custId) {
+//            ctx.json(account);
+//        } else {
+//            ctx.status(HttpStatus.NOT_FOUND_404);
+//        }
+//    };
 }

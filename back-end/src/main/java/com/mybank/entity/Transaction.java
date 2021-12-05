@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.util.Date;
 
+import com.mybank.repository.JpaAccountRepo;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name="transactions")
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private int t_id;
 
 
     @Temporal(TemporalType.DATE)
@@ -25,10 +28,21 @@ public class Transaction {
 
     private double amount;
 
-    //preform the transfer of funds
+
+    //preform the transfer of funds and update accounts in database
     private void transfer(Account act1, Account act2, double v){
-        act1.setBalance(act1.getBalance()-v);
-        act2.setBalance(act2.getBalance()+v);
+        // create em factory
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("my-pu");
+        // create jpa acct repo instance using em factory
+        JpaAccountRepo jpaAccountRepo = new JpaAccountRepo(entityManagerFactory);
+        // perform debit
+       //act1.setBalance(act1.getBalance()-v);
+        // perform debit in database
+        jpaAccountRepo.updateDebit(act1,v);
+        //perform credit
+        //act2.setBalance(act2.getBalance()+v);
+        // perform credit in database
+        jpaAccountRepo.updateCredit(act2,v);
     }
     // Constructor
     public Transaction(Account fromAccount, Account toAccount, double amount) {
@@ -44,11 +58,11 @@ public class Transaction {
     // Setters and getters
 
     public int getId() {
-        return id;
+        return t_id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.t_id = id;
     }
 
     public double getAmount() {
@@ -84,7 +98,7 @@ public class Transaction {
     @Override
     public String toString() {
         return "Transaction{" +
-                "id=" + id +
+                "id=" + t_id +
                 ", date=" + date +
                 ", fromAccount=" + fromAccount +
                 ", toAccount='" + toAccount + '\'' +

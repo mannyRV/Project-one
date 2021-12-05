@@ -30,11 +30,9 @@ public class JpaAccountRepo implements AccountRepo{
     public Account viewAccount(String accountNumber) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        String qstr = "FROM Account A WHERE A.number =:accountNumber";
+        String qstr = "FROM Account a WHERE a.number =:actnumber";
         Query query= entityManager.createQuery(qstr,Account.class);
-        query.setParameter("accountNumber",accountNumber);
-        Account account = new Account();
-        account = (Account) query.getSingleResult();
+        Account account = (Account) query.setParameter("actnumber",accountNumber).getSingleResult();
         entityManager.getTransaction().commit();
         entityManager.close();
         return account;
@@ -57,6 +55,28 @@ public class JpaAccountRepo implements AccountRepo{
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.remove(entityManager.find(Account.class,accountNumber));
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+    public void updateDebit(Account account, double amount) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        String number = account.getNumber();
+        double newBal = account.getBalance()-amount;
+        String hql = "UPDATE Account a set a.balance = :newBal WHERE a.number = :number";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("newBal",newBal).setParameter("number",number);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+    public void updateCredit(Account account, double amount) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        String number = account.getNumber();
+        double newBal = account.getBalance()+amount;
+        String hql = "UPDATE Account a set a.balance = :newBal WHERE a.number = :number";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("newBal",newBal).setParameter("number",number);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
